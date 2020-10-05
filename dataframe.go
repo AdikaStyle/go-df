@@ -19,4 +19,5 @@ type DataFrame interface {
 
 	GetRowCount() int
 	GetHeaders() []string
+	Print()
 }
