@@ -1,4 +1,4 @@
-package df
+package go_df
 
 import (
 	"fmt"
@@ -107,7 +107,7 @@ func (this *inMemoryDataframe) GroupBy(columns []string, aggregations map[string
 		}
 
 		for _, c := range columns {
-			store[c] = append(store[c], First(v[c]))
+			store[c] = append(store[c], First()(v[c]))
 		}
 	}
 
@@ -151,7 +151,7 @@ func (this *inMemoryDataframe) LeftJoin(with DataFrame, on JoinCondition) DataFr
 }
 
 func (this *inMemoryDataframe) RightJoin(with DataFrame, on JoinCondition) DataFrame {
-
+	panic("")
 }
 
 func (this *inMemoryDataframe) OuterJoin(with DataFrame, on JoinCondition) DataFrame {

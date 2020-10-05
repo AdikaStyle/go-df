@@ -1,10 +1,13 @@
-package df
+package go_df
 
 type Condition func(row Row) bool
 
 type JoinCondition func(left Row, right Row) bool
 
 type Aggregation func(column []CValue) CValue
+
+type Aggs map[string]Aggregation
+type Cols []string
 
 type DataFrame interface {
 	Select(columns ...string) DataFrame

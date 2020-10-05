@@ -1,4 +1,4 @@
-package df
+package go_df
 
 import (
 	"log"
