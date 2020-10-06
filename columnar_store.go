@@ -1,13 +1,13 @@
 package go_df
 
 import (
+	"github.com/cstockton/go-conv"
 	"log"
+	"math/rand"
 	"reflect"
 )
 
 type Row map[string]CValue
-
-type CValue interface{}
 
 type ColumnStore struct {
 	headers []string
@@ -53,6 +53,56 @@ func (this *ColumnStore) RemoveColumn(name string) {
 
 	removeString(&this.headers, nameIdx)
 	delete(this.store, name)
+}
+
+func (this *ColumnStore) Sort(column string, order int8) {
+	sortCol := this.store[column]
+
+	this.quickSort(sortCol[:], 0, order, func(idx1, idx2 int) {
+		for _, k := range this.headers {
+			this.store[k][idx1], this.store[k][idx2] = this.store[k][idx2], this.store[k][idx1]
+		}
+	})
+
+	return
+}
+
+type swapFunc = func(idx1, idx2 int)
+
+func (this *ColumnStore) quickSort(a []CValue, offset int, order int8, fn swapFunc) {
+	if len(a) < 2 {
+		return
+	}
+
+	left, right := 0, len(a)-1
+	pivot := rand.Int() % len(a)
+
+	fn(pivot+offset, right+offset)
+
+	for i := range a {
+		ai, err := conv.Int64(a[i])
+		PanicOnError(err)
+		aright, err := conv.Int64(a[right])
+		PanicOnError(err)
+
+		if order == 1 {
+			if ai < aright {
+				fn(left+offset, i+offset)
+				left++
+			}
+		} else {
+			if ai > aright {
+				fn(left+offset, i+offset)
+				left++
+			}
+		}
+	}
+
+	fn(left+offset, right+offset)
+
+	this.quickSort(a[:left], offset, order, fn)
+	this.quickSort(a[left+1:], offset+left+1, order, fn)
+	return
 }
 
 func (this *ColumnStore) GetRowsCount() int {
