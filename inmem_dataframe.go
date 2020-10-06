@@ -25,7 +25,9 @@ func (this *inMemoryDataframe) Select(columns ...string) DataFrame {
 		selection[col] = true
 	}
 
-	for _, header := range this.cs.headers {
+	var headers []string = make([]string, len(this.GetHeaders()))
+	copy(headers, this.cs.headers)
+	for _, header := range headers {
 		if header == "" {
 			continue
 		}
@@ -158,6 +160,18 @@ func (this *inMemoryDataframe) OuterJoin(with DataFrame, on JoinCondition) DataF
 	panic("implement me")
 }
 
+func (this *inMemoryDataframe) ForEach(onRow ForEachRow) DataFrame {
+	for i := 0; i < this.GetRowCount(); i++ {
+		onRow(this.cs.GetRow(i))
+	}
+	return this
+}
+
+func (this *inMemoryDataframe) OrderBy(columns string, order int8) DataFrame {
+	this.cs.Sort(columns, order)
+	return this
+}
+
 func (this *inMemoryDataframe) GetRowCount() int {
 	return this.cs.GetRowsCount()
 }
@@ -169,6 +183,7 @@ func (this *inMemoryDataframe) GetHeaders() []string {
 func (this *inMemoryDataframe) Print() {
 	tw := tablewriter.NewWriter(os.Stdout)
 	tw.SetHeader(this.GetHeaders())
+	tw.SetAutoFormatHeaders(false)
 
 	for i := 0; i < int(math.Min(30, float64(this.GetRowCount()))); i++ {
 		r := make([]string, len(this.GetHeaders()))
@@ -182,6 +197,7 @@ func (this *inMemoryDataframe) Print() {
 	}
 
 	tw.Render()
+	fmt.Printf("Total row count: %d\n", this.GetRowCount())
 }
 
 func encodeGroupKey(cols []string, row Row) string {
