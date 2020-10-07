@@ -1,4 +1,4 @@
-package go_df
+package types
 
 func PanicOnError(err error) {
 	if err != nil {
