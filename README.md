@@ -1,4 +1,7 @@
-# Data Frames for Go
+# Data Frames for Go 
+[![Go Report Card](https://goreportcard.com/badge/github.com/AdikaStyle/go-df)](https://goreportcard.com/report/github.com/AdikaStyle/go-df)
+
+
 An effort to make a fully featured data frame/wrangling library  
 
 ## Example:
