@@ -5,9 +5,9 @@ import (
 	"testing"
 )
 
-const one = IntegerType(1)
-const one_1 = IntegerType(1)
-const two = IntegerType(2)
+const one = Integer(1)
+const one_1 = Integer(1)
+const two = Integer(2)
 
 func TestIntegerType_String(t *testing.T) {
 	assert.EqualValues(t, "1", one.String())
@@ -15,8 +15,8 @@ func TestIntegerType_String(t *testing.T) {
 }
 
 func TestIntegerType_Kind(t *testing.T) {
-	assert.EqualValues(t, Integer, one.Kind())
-	assert.EqualValues(t, Integer, two.Kind())
+	assert.EqualValues(t, KindInteger, one.Kind())
+	assert.EqualValues(t, KindInteger, two.Kind())
 }
 
 func TestIntegerType_Equals(t *testing.T) {

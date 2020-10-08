@@ -5,9 +5,9 @@ import (
 	"github.com/cstockton/go-conv"
 )
 
-type IntegerType int64
+type Integer int64
 
-func (i IntegerType) String() string {
+func (i Integer) String() string {
 	str, err := conv.String(int64(i))
 	if err != nil {
 		panic(err)
@@ -15,14 +15,14 @@ func (i IntegerType) String() string {
 	return str
 }
 
-func (i IntegerType) Equals(other Type) bool {
+func (i Integer) Equals(other TypedValue) bool {
 	if i.Kind() == other.Kind() {
 		return i == other
 	}
 	return false
 }
 
-func (i IntegerType) Compare(other Type) TypeComparision {
+func (i Integer) Compare(other TypedValue) TypeComparision {
 	if i.Kind() != other.Kind() {
 		panic(fmt.Sprintf(
 			"couldn't compare between different kind of types where left is: %s(%v) and right is: %s(%v)",
@@ -41,12 +41,16 @@ func (i IntegerType) Compare(other Type) TypeComparision {
 	}
 }
 
-func (i IntegerType) Cast(toPtr interface{}) {
+func (i Integer) Cast(toPtr interface{}) {
 	if err := conv.Infer(toPtr, i); err != nil {
 		panic(err)
 	}
 }
 
-func (i IntegerType) Kind() TypeKind {
-	return Integer
+func (i Integer) Kind() TypeKind {
+	return KindInteger
+}
+
+func (i Integer) Ptr() TypedValue {
+	return &i
 }

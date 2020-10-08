@@ -5,9 +5,9 @@ import (
 	"testing"
 )
 
-const pi = DecimalType(3.14)
-const pi_1 = DecimalType(3.14)
-const e = DecimalType(2.71)
+const pi = Decimal(3.14)
+const pi_1 = Decimal(3.14)
+const e = Decimal(2.71)
 
 func TestDecimalType_String(t *testing.T) {
 	assert.EqualValues(t, "3.14", pi.String())
@@ -15,8 +15,8 @@ func TestDecimalType_String(t *testing.T) {
 }
 
 func TestDecimalType_Kind(t *testing.T) {
-	assert.EqualValues(t, Decimal, pi.Kind())
-	assert.EqualValues(t, Decimal, e.Kind())
+	assert.EqualValues(t, KindDecimal, pi.Kind())
+	assert.EqualValues(t, KindDecimal, e.Kind())
 }
 
 func TestDecimalType_Equals(t *testing.T) {

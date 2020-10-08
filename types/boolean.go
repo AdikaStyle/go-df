@@ -5,9 +5,9 @@ import (
 	"github.com/cstockton/go-conv"
 )
 
-type BooleanType bool
+type Boolean bool
 
-func (b BooleanType) String() string {
+func (b Boolean) String() string {
 	if b {
 		return "true"
 	} else {
@@ -15,14 +15,14 @@ func (b BooleanType) String() string {
 	}
 }
 
-func (b BooleanType) Equals(other Type) bool {
+func (b Boolean) Equals(other TypedValue) bool {
 	if b.Kind() == other.Kind() {
 		return b == other
 	}
 	return false
 }
 
-func (b BooleanType) Compare(other Type) TypeComparision {
+func (b Boolean) Compare(other TypedValue) TypeComparision {
 	if b.Kind() != other.Kind() {
 		panic(fmt.Sprintf(
 			"couldn't compare between different kind of types where left is: %s(%v) and right is: %s(%v)",
@@ -42,12 +42,16 @@ func (b BooleanType) Compare(other Type) TypeComparision {
 	}
 }
 
-func (b BooleanType) Cast(toPtr interface{}) {
+func (b Boolean) Cast(toPtr interface{}) {
 	if err := conv.Infer(toPtr, b); err != nil {
 		panic(err)
 	}
 }
 
-func (b BooleanType) Kind() TypeKind {
-	return Boolean
+func (b Boolean) Kind() TypeKind {
+	return KindBoolean
+}
+
+func (b Boolean) Ptr() TypedValue {
+	return &b
 }

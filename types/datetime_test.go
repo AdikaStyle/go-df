@@ -6,9 +6,9 @@ import (
 	"time"
 )
 
-var datetime1999 = DateTimeType(time.Date(1999, 1, 1, 10, 0, 0, 0, time.UTC))
-var datetime1999_1 = DateTimeType(time.Date(1999, 1, 1, 10, 0, 0, 0, time.UTC))
-var datetime2010 = DateTimeType(time.Date(2010, 1, 1, 10, 0, 0, 0, time.UTC))
+var datetime1999 = Datetime(time.Date(1999, 1, 1, 10, 0, 0, 0, time.UTC))
+var datetime1999_1 = Datetime(time.Date(1999, 1, 1, 10, 0, 0, 0, time.UTC))
+var datetime2010 = Datetime(time.Date(2010, 1, 1, 10, 0, 0, 0, time.UTC))
 
 func TestDateTimeType_String(t *testing.T) {
 	assert.EqualValues(t, "1999-01-01 10:00:00 +0000 UTC", datetime1999.String())
@@ -16,8 +16,8 @@ func TestDateTimeType_String(t *testing.T) {
 }
 
 func TestDateTimeType_Kind(t *testing.T) {
-	assert.EqualValues(t, DateTime, datetime1999.Kind())
-	assert.EqualValues(t, DateTime, datetime2010.Kind())
+	assert.EqualValues(t, KindDatetime, datetime1999.Kind())
+	assert.EqualValues(t, KindDatetime, datetime2010.Kind())
 }
 
 func TestDateTimeType_Equals(t *testing.T) {

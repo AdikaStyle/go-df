@@ -1,12 +1,14 @@
 package types
 
-type MissingType struct{}
+type MissingValue struct{}
 
-func (m MissingType) String() string {
+var Missing MissingValue
+
+func (m MissingValue) String() string {
 	return "null"
 }
 
-func (m MissingType) Equals(other Type) bool {
+func (m MissingValue) Equals(other TypedValue) bool {
 	if other == nil {
 		return true
 	} else {
@@ -14,7 +16,7 @@ func (m MissingType) Equals(other Type) bool {
 	}
 }
 
-func (m MissingType) Compare(other Type) TypeComparision {
+func (m MissingValue) Compare(other TypedValue) TypeComparision {
 	if other == nil {
 		return Equals
 	} else {
@@ -22,10 +24,14 @@ func (m MissingType) Compare(other Type) TypeComparision {
 	}
 }
 
-func (m MissingType) Cast(toPtr interface{}) {
+func (m MissingValue) Cast(toPtr interface{}) {
 	toPtr = nil
 }
 
-func (m MissingType) Kind() TypeKind {
-	return Missing
+func (m MissingValue) Kind() TypeKind {
+	return KindMissing
+}
+
+func (m MissingValue) Ptr() TypedValue {
+	return nil
 }

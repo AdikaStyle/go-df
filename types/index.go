@@ -13,20 +13,21 @@ const (
 type TypeKind string
 
 const (
-	Boolean  TypeKind = "Boolean"
-	Integer  TypeKind = "Integer"
-	Decimal  TypeKind = "Decimal"
-	String   TypeKind = "String"
-	DateTime TypeKind = "DateTime"
+	KindBoolean  TypeKind = "Boolean"
+	KindInteger  TypeKind = "Integer"
+	KindDecimal  TypeKind = "Decimal"
+	KindString   TypeKind = "String"
+	KindDatetime TypeKind = "Datetime"
 
-	Missing TypeKind = "Missing"
-	Unknown TypeKind = "Unknown"
+	KindMissing TypeKind = "KindMissing"
+	KindUnknown TypeKind = "KindUnknown"
 )
 
-type Type interface {
+type TypedValue interface {
 	fmt.Stringer
-	Equals(other Type) bool
-	Compare(other Type) TypeComparision
+	Equals(other TypedValue) bool
+	Compare(other TypedValue) TypeComparision
 	Cast(toPtr interface{})
 	Kind() TypeKind
+	Ptr() TypedValue
 }

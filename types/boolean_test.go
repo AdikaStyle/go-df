@@ -5,8 +5,8 @@ import (
 	"testing"
 )
 
-const trueType = BooleanType(true)
-const falseType = BooleanType(false)
+const trueType = Boolean(true)
+const falseType = Boolean(false)
 
 func TestBooleanType_String(t *testing.T) {
 	assert.EqualValues(t, "true", trueType.String())
@@ -14,8 +14,8 @@ func TestBooleanType_String(t *testing.T) {
 }
 
 func TestBooleanType_Kind(t *testing.T) {
-	assert.EqualValues(t, Boolean, trueType.Kind())
-	assert.EqualValues(t, Boolean, falseType.Kind())
+	assert.EqualValues(t, KindBoolean, trueType.Kind())
+	assert.EqualValues(t, KindBoolean, falseType.Kind())
 }
 
 func TestBooleanType_Equals(t *testing.T) {
