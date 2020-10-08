@@ -82,7 +82,7 @@ Dataframe has 4 columns and 2 rows in total.
 ```
 
 ## Features
-- Predefined type system: Boolean, Integer, Decimal, String, DateTime.
+- Predefined type system: Boolean, Integer, Decimal, String, DateTime, Missing.
 - Select columns.
 - Filter by custom condition.
 - Concatenate two data frames.
