@@ -23,12 +23,12 @@ func CountDistinct() Aggregation {
 
 func First() Aggregation {
 	return func(column backend.Column) types.TypedValue {
-		return column[0]
+		return column[0].TypedValue
 	}
 }
 
 func Last() Aggregation {
 	return func(column backend.Column) types.TypedValue {
-		return column[len(column)-1]
+		return column[len(column)-1].TypedValue
 	}
 }

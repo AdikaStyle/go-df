@@ -1,6 +1,8 @@
 package dataframe
 
-import "github.com/AdikaStyle/go-df/backend"
+import (
+	"github.com/AdikaStyle/go-df/backend"
+)
 
 type columnarDataframe struct {
 	backend backend.Backend

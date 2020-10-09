@@ -103,7 +103,7 @@ Dataframe has 4 columns and 2 rows in total.
 
 ## Supported Adapters
 - From CSV.
-- [TODO] To CSV.
+- To CSV.
 - [TODO] From SQL.
 - [TODO] To SQL.
 - [TODO] From Structs.
