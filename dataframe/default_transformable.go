@@ -3,6 +3,7 @@ package dataframe
 import (
 	"github.com/AdikaStyle/go-df/backend"
 	"github.com/AdikaStyle/go-df/conds"
+	"github.com/AdikaStyle/go-df/types"
 )
 
 type defaultTransformable struct {
@@ -11,6 +12,16 @@ type defaultTransformable struct {
 
 func newDefaultTransformable(df Dataframe) *defaultTransformable {
 	return &defaultTransformable{df: df}
+}
+
+func (this *defaultTransformable) UpdateColumn(name string, fn backend.MutateFunction) Dataframe {
+	this.df.getBackend().UpdateColumn(name, fn)
+	return this.df
+}
+
+func (this *defaultTransformable) AddColumn(name string, kind types.TypeKind, fn backend.MutateFunction) Dataframe {
+	this.df.getBackend().AddColumn(name, kind, fn)
+	return this.df
 }
 
 func (this *defaultTransformable) Concat(with Dataframe) Dataframe {

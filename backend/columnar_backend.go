@@ -1,6 +1,7 @@
 package backend
 
 import (
+	"github.com/AdikaStyle/go-df/types"
 	"github.com/cstockton/go-conv"
 	"log"
 	"math/rand"
@@ -109,6 +110,39 @@ func (this *columnarBackend) RenameColumn(old string, new string) {
 
 	this.columns[new] = this.columns[old]
 	delete(this.columns, old)
+}
+
+func (this *columnarBackend) AddColumn(name string, kind types.TypeKind, mutateFn MutateFunction) {
+	if _, found := this.columns[name]; found {
+		log.Fatalf("failed to add column %s(%s) there is already a column named: %s", name, kind, name)
+	}
+
+	this.columns[name] = make(Column, this.GetRowCount())
+
+	this.ForEachRow(func(id int, row Row) {
+		newValue := mutateFn(id, row)
+		this.columns[name][id] = Cell{
+			TypedValue: newValue,
+			filtered:   false,
+		}
+	})
+
+	this.headers = append(this.headers, Header{
+		Name:    name,
+		Kind:    kind,
+		Visible: true,
+	})
+}
+
+func (this *columnarBackend) UpdateColumn(name string, mutateFn MutateFunction) {
+	if _, found := this.columns[name]; !found {
+		log.Fatalf("failed to update column %s, there is no column named: %s", name, name)
+	}
+
+	this.ForEachRow(func(id int, row Row) {
+		newValue := mutateFn(id, row)
+		this.columns[name][id].TypedValue = newValue
+	})
 }
 
 func (this *columnarBackend) SortByColumn(column string, order Ordering) {

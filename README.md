@@ -87,6 +87,7 @@ Dataframe has 4 columns and 2 rows in total.
 ## Features
 - Predefined type system: Boolean, Integer, Decimal, String, DateTime, Missing.
 - Select columns.
+- Update/Append Columns.
 - Filter by custom condition.
 - Concatenate two data frames.
 - Split by custom condition.

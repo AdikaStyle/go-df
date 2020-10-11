@@ -9,6 +9,43 @@ import (
 	"testing"
 )
 
+func TestDefaultTransformable_UpdateColumn(t *testing.T) {
+	df := newColumnarDataframe(transBackend())
+
+	df.UpdateColumn("inventory", func(id int, row backend.Row) types.TypedValue {
+		return 1000 * row["inventory"].(types.Integer)
+	})
+
+	df.VisitRows(func(id int, row backend.Row) {
+		assert.True(t, row["inventory"].(types.Integer) > 10000)
+	})
+
+	df.Print(os.Stdout)
+}
+
+func TestDefaultTransformable_AddColumn(t *testing.T) {
+	df := newColumnarDataframe(transBackend())
+
+	df.AddColumn("isApple", types.KindString, func(id int, row backend.Row) types.TypedValue {
+		pname := row["name"].String()
+		if pname == "Macbook" || pname == "iPad" {
+			return types.Boolean(true)
+		}
+		return types.Boolean(false)
+	})
+
+	df.VisitRows(func(id int, row backend.Row) {
+		pname := row["name"].String()
+		if pname == "Macbook" || pname == "iPad" {
+			assert.True(t, row["isApple"].Equals(types.Boolean(true)))
+		} else {
+			assert.True(t, row["isApple"].Equals(types.Boolean(false)))
+		}
+	})
+
+	df.Print(os.Stdout)
+}
+
 func TestDefaultTransformable_Concat(t *testing.T) {
 	df := newColumnarDataframe(transBackend())
 

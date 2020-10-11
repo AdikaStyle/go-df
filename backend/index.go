@@ -13,6 +13,8 @@ type Backend interface {
 	AppendRow(row ...Row)
 	ForEachRow(visitor RowVisitor)
 	ForEachColumn(visitor ColumnVisitor)
+	AddColumn(name string, kind types.TypeKind, mutateFn MutateFunction)
+	UpdateColumn(name string, mutateFn MutateFunction)
 	RemoveRows(ids ...int)
 	RemoveColumn(name string)
 	RenameColumn(old string, new string)
@@ -24,6 +26,8 @@ type Backend interface {
 type RowVisitor func(id int, row Row)
 
 type ColumnVisitor func(header string, values Column)
+
+type MutateFunction func(id int, row Row) types.TypedValue
 
 type Row map[string]types.TypedValue
 

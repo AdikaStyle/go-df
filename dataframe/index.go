@@ -4,6 +4,7 @@ import (
 	"github.com/AdikaStyle/go-df/aggs"
 	"github.com/AdikaStyle/go-df/backend"
 	"github.com/AdikaStyle/go-df/conds"
+	"github.com/AdikaStyle/go-df/types"
 	"io"
 )
 
@@ -34,6 +35,8 @@ type Filterable interface {
 }
 
 type Transformable interface {
+	UpdateColumn(name string, fn backend.MutateFunction) Dataframe
+	AddColumn(name string, kind types.TypeKind, fn backend.MutateFunction) Dataframe
 	Concat(with Dataframe) Dataframe
 	Split(cond conds.Condition) (onTrue Dataframe, onFalse Dataframe)
 }
