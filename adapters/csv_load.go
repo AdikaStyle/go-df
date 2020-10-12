@@ -18,7 +18,7 @@ func LoadCSV(path string, delimiter rune) dataframe.Dataframe {
 	records, err := readCsv(content, delimiter)
 	types.PanicOnError(err)
 
-	headers := buildHeaders(records)
+	headers := buildHeaders(records[0])
 
 	be := backend.New(headers)
 	populateCSV(be, records)
@@ -36,9 +36,9 @@ func populateCSV(be backend.Backend, records [][]string) {
 	}
 }
 
-func buildHeaders(csvResult [][]string) backend.Headers {
+func buildHeaders(csvResult []string) backend.Headers {
 	var headers backend.Headers
-	for _, h := range csvResult[0] {
+	for _, h := range csvResult {
 		headers = append(headers, backend.Header{
 			Name:    h,
 			Kind:    types.KindUnknown,
@@ -46,7 +46,7 @@ func buildHeaders(csvResult [][]string) backend.Headers {
 		})
 	}
 
-	for idx, v := range csvResult[1] {
+	for idx, v := range csvResult {
 		headers[idx].Kind = parseString(v).Kind()
 	}
 
