@@ -28,7 +28,7 @@ func LoadSQL(rows *sql.Rows) dataframe.Dataframe {
 	row := make(backend.Row)
 	iterateRows(cols, rows, func(in []string) {
 		for idx, col := range cols {
-			row[col] = parseString(cols[idx])
+			row[col] = parseString(in[idx])
 		}
 		be.AppendRow(row)
 	})
