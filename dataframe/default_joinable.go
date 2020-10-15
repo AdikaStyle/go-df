@@ -16,17 +16,26 @@ func newDefaultJoinable(df Dataframe) *defaultJoinable {
 func (this *defaultJoinable) LeftJoin(with Dataframe, on conds.JoinCondition) Dataframe {
 	newHeaders := combineHeaders(this.df, with)
 	joinedDf := this.df.constructNew(newHeaders)
-	this.df.VisitRows(func(leftId int, left backend.Row) {
-		added := false
-		with.VisitRows(func(rightId int, right backend.Row) {
-			if on(left, right) {
-				row := combineRows(left, right, false)
-				joinedDf.getBackend().AppendRow(row)
-				added = true
-			}
-		})
 
-		if !added {
+	index := make(map[string][]int)
+	with.VisitRows(func(id int, row backend.Row) {
+		indexKey := on.ColumnsHint(row)
+		index[indexKey] = append(index[indexKey], id)
+	})
+
+	this.df.VisitRows(func(id int, left backend.Row) {
+		indexKey := on.ColumnsHint(left)
+
+		matches, found := index[indexKey]
+		if found {
+			for _, match := range matches {
+				right := with.getBackend().GetRow(match)
+				if on.Match(left, right) {
+					joinedRow := combineRows(left, right, false)
+					joinedDf.getBackend().AppendRow(joinedRow)
+				}
+			}
+		} else {
 			row := combineRows(left, with.getBackend().GetRow(0), true)
 			joinedDf.getBackend().AppendRow(row)
 		}
@@ -42,13 +51,34 @@ func (this *defaultJoinable) RightJoin(with Dataframe, on conds.JoinCondition) D
 func (this *defaultJoinable) InnerJoin(with Dataframe, on conds.JoinCondition) Dataframe {
 	newHeaders := combineHeaders(this.df, with)
 	joinedDf := this.df.constructNew(newHeaders)
-	this.df.VisitRows(func(leftId int, left backend.Row) {
-		with.VisitRows(func(rightId int, right backend.Row) {
-			if on(left, right) {
-				joinedRow := combineRows(left, right, false)
-				joinedDf.getBackend().AppendRow(joinedRow)
+
+	var small, big Dataframe
+	if this.df.GetRowCount() > with.GetRowCount() {
+		big = this.df
+		small = with
+	} else {
+		big = with
+		small = this.df
+	}
+
+	index := make(map[string][]int)
+	small.VisitRows(func(id int, row backend.Row) {
+		indexKey := on.ColumnsHint(row)
+		index[indexKey] = append(index[indexKey], id)
+	})
+
+	big.VisitRows(func(id int, row backend.Row) {
+		indexKey := on.ColumnsHint(row)
+		matches, found := index[indexKey]
+		if found {
+			for _, match := range matches {
+				row2 := small.getBackend().GetRow(match)
+				if on.Match(row, row2) {
+					joinedRow := combineRows(row, row2, false)
+					joinedDf.getBackend().AppendRow(joinedRow)
+				}
 			}
-		})
+		}
 	})
 
 	return joinedDf
