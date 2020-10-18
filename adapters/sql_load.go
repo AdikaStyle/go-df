@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"github.com/AdikaStyle/go-df/backend"
 	"github.com/AdikaStyle/go-df/dataframe"
+	"github.com/AdikaStyle/go-df/types"
 )
 
 func LoadSQL(rows *sql.Rows) dataframe.Dataframe {
@@ -21,31 +22,39 @@ func LoadSQL(rows *sql.Rows) dataframe.Dataframe {
 		panic(err)
 	}
 
-	headers := buildHeaders(cols)
+	csvRows := parseRows(cols, rows)
+
+	headers := AnalyzeDataset(cols, csvRows)
 	be := backend.New(headers)
 	df := dataframe.New(be)
 
 	row := make(backend.Row)
-	iterateRows(cols, rows, func(in []string) {
+
+	for _, r := range csvRows {
 		for idx, col := range cols {
-			row[col] = parseString(in[idx])
+			row[col] = string2TypedValueKind(r[idx], headers[idx].Kind)
+			if be.GetHeaders()[idx].Kind == types.KindUnknown {
+				be.GetHeaders()[idx].Kind = row[col].Kind()
+			}
 		}
 		be.AppendRow(row)
-	})
+	}
 
 	return df
 }
 
-func iterateRows(cols []string, rows *sql.Rows, onRow func(in []string)) {
-	rawResult := make([][]byte, len(cols))
-	result := make([]string, len(cols))
+func parseRows(headers []string, rows *sql.Rows) [][]string {
+	rawResult := make([][]byte, len(headers))
+	result := make([]string, len(headers))
 
-	dest := make([]interface{}, len(cols))
+	dest := make([]interface{}, len(headers))
 	for i := range rawResult {
 		dest[i] = &rawResult[i]
 	}
 
+	var out [][]string
 	for rows.Next() {
+		outRow := make([]string, len(headers))
 		err := rows.Scan(dest...)
 		if err != nil {
 			panic(err)
@@ -59,6 +68,12 @@ func iterateRows(cols []string, rows *sql.Rows, onRow func(in []string)) {
 			}
 		}
 
-		onRow(result)
+		for idx := range result {
+			outRow[idx] = result[idx]
+		}
+
+		out = append(out, outRow)
 	}
+
+	return out
 }

@@ -90,6 +90,8 @@ Dataframe has 4 columns and 2 rows in total.
 - Update/Append Columns.
 - Filter by custom condition.
 - Concatenate two data frames.
+- Cast columns to other types.
+- Apply a function to entire column.
 - Split by custom condition.
 - Group by multiple columns with field aggregations.
 - Order by single field (ASC/DESC).
@@ -105,7 +107,7 @@ Dataframe has 4 columns and 2 rows in total.
 ## Supported Adapters
 - From CSV.
 - To CSV.
-- [TODO] From SQL.
-- [TODO] To SQL.
+- From SQL.
+- To SQL.
 - [TODO] From Structs.
 - [TODO] To Structs.
