@@ -39,6 +39,8 @@ type Transformable interface {
 	AddColumn(name string, kind types.TypeKind, fn backend.MutateFunction) Dataframe
 	Concat(with Dataframe) Dataframe
 	Split(cond conds.Condition) (onTrue Dataframe, onFalse Dataframe)
+	CastColumn(name string, to types.TypeKind) Dataframe
+	Apply(name string, fn func(value types.TypedValue) types.TypedValue) Dataframe
 }
 
 type Aggregatable interface {
@@ -55,6 +57,7 @@ type Joinable interface {
 
 type Printable interface {
 	Print(w io.Writer) Dataframe
+	Describe(w io.Writer) Dataframe
 }
 
 type By []string

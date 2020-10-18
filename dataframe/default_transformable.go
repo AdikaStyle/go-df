@@ -45,3 +45,13 @@ func (this *defaultTransformable) Split(cond conds.Condition) (onTrue Dataframe,
 
 	return onTrue, onFalse
 }
+
+func (this *defaultTransformable) CastColumn(name string, to types.TypeKind) Dataframe {
+	this.df.getBackend().CastColumn(name, to)
+	return this.df
+}
+
+func (this *defaultTransformable) Apply(name string, fn func(value types.TypedValue) types.TypedValue) Dataframe {
+	this.df.getBackend().ApplyOnColumn(name, fn)
+	return this.df
+}

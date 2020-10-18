@@ -26,7 +26,7 @@ func TestDefaultTransformable_UpdateColumn(t *testing.T) {
 func TestDefaultTransformable_AddColumn(t *testing.T) {
 	df := newColumnarDataframe(transBackend())
 
-	df.AddColumn("isApple", types.KindString, func(id int, row backend.Row) types.TypedValue {
+	df.AddColumn("isApple", types.KindBoolean, func(id int, row backend.Row) types.TypedValue {
 		pname := row["name"].String()
 		if pname == "Macbook" || pname == "iPad" {
 			return types.Boolean(true)

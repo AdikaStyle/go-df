@@ -21,6 +21,8 @@ type Backend interface {
 	SortByColumn(column string, order Ordering)
 	ConstructNew(headers Headers) Backend
 	SetColumns(columns Columns)
+	CastColumn(name string, toKind types.TypeKind)
+	ApplyOnColumn(name string, fn func(value types.TypedValue) types.TypedValue)
 }
 
 type RowVisitor func(id int, row Row)

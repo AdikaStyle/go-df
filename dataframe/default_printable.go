@@ -45,6 +45,18 @@ func (this *defaultPrintable) Print(w io.Writer) Dataframe {
 	return this.df
 }
 
+func (this *defaultPrintable) Describe(w io.Writer) Dataframe {
+	tw := tablewriter.NewWriter(w)
+	tw.SetHeader([]string{"Num", "Name", "Type"})
+
+	for i, h := range this.df.GetHeaders() {
+		tw.Append([]string{fmt.Sprintf("%d", i), h.Name, string(h.Kind)})
+	}
+	tw.Render()
+	fmt.Printf("Dataframe has %d columns and %d rows in total.\n", len(this.df.GetHeaders()), this.df.GetRowCount())
+	return this.df
+}
+
 func onlyNames(headers backend.Headers) []string {
 	var headerNames []string
 	for _, h := range headers {

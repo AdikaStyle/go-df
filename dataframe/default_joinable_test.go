@@ -51,8 +51,8 @@ func TestDefaultJoinable_LeftJoin(t *testing.T) {
 	joined.VisitRows(func(id int, row backend.Row) {
 		if row["SKU"] == types.String("A0") {
 			l := sales.getBackend().GetRow(id)
-			assert.Nil(t, row["inventory"])
-			assert.Nil(t, row["name"])
+			assert.EqualValues(t, types.Missing, row["inventory"])
+			assert.EqualValues(t, types.Missing, row["name"])
 			delete(row, "inventory")
 			delete(row, "name")
 			assert.EqualValues(t, l, row)

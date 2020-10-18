@@ -39,7 +39,11 @@ func (this *columnarBackend) GetRowCount() int {
 
 func (this *columnarBackend) GetRow(id int) Row {
 	for _, header := range this.headers {
-		this.row[header.Name] = this.columns[header.Name][id].TypedValue
+		if this.columns[header.Name][id].TypedValue == types.Missing {
+			this.row[header.Name] = types.Missing
+		} else {
+			this.row[header.Name] = types.AutoCast(this.columns[header.Name][id].TypedValue, header.Kind)
+		}
 	}
 	return this.row
 }
@@ -166,6 +170,35 @@ func (this *columnarBackend) SetColumns(columns Columns) {
 	this.columns = columns
 	this.headers = columns.GetHeaders()
 	this.filtered = 0
+}
+
+func (this *columnarBackend) CastColumn(name string, toKind types.TypeKind) {
+	col, found := this.columns[name]
+	if !found {
+		log.Fatalf("canno't find column with name: %s when trying to cast column to: %s", name, toKind)
+	}
+
+	for idx := range col {
+		col[idx].TypedValue = types.AutoCast(col[idx].TypedValue, toKind)
+	}
+
+	for idx := range this.headers {
+		if this.headers[idx].Name == name {
+			this.headers[idx].Kind = toKind
+			break
+		}
+	}
+}
+
+func (this *columnarBackend) ApplyOnColumn(name string, fn func(value types.TypedValue) types.TypedValue) {
+	col, found := this.columns[name]
+	if !found {
+		log.Fatalf("canno't apply fn to column with name: %s, column does not exists", name)
+	}
+
+	for idx := range col {
+		col[idx].TypedValue = fn(col[idx].TypedValue)
+	}
 }
 
 func (this *columnarBackend) quickSort(a Column, offset int, order bool, fn swapFunc) {
