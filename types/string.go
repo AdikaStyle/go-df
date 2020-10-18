@@ -50,3 +50,11 @@ func (i String) Kind() TypeKind {
 func (i String) Ptr() TypedValue {
 	return &i
 }
+
+func (i String) NativeType() interface{} {
+	return string(i)
+}
+
+func (i String) Precedence() int {
+	return 4
+}

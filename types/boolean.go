@@ -55,3 +55,11 @@ func (b Boolean) Kind() TypeKind {
 func (b Boolean) Ptr() TypedValue {
 	return &b
 }
+
+func (b Boolean) NativeType() interface{} {
+	return bool(b)
+}
+
+func (b Boolean) Precedence() int {
+	return 0
+}

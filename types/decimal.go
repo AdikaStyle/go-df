@@ -42,7 +42,7 @@ func (i Decimal) Compare(other TypedValue) TypeComparision {
 }
 
 func (i Decimal) Cast(toPtr interface{}) {
-	if err := conv.Infer(toPtr, i); err != nil {
+	if err := conv.Infer(toPtr, i.NativeType()); err != nil {
 		panic(err)
 	}
 }
@@ -53,4 +53,12 @@ func (i Decimal) Kind() TypeKind {
 
 func (i Decimal) Ptr() TypedValue {
 	return &i
+}
+
+func (i Decimal) NativeType() interface{} {
+	return float64(i)
+}
+
+func (i Decimal) Precedence() int {
+	return 2
 }

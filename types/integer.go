@@ -54,3 +54,11 @@ func (i Integer) Kind() TypeKind {
 func (i Integer) Ptr() TypedValue {
 	return &i
 }
+
+func (i Integer) NativeType() interface{} {
+	return int64(i)
+}
+
+func (i Integer) Precedence() int {
+	return 1
+}

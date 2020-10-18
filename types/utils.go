@@ -2,6 +2,7 @@ package types
 
 import (
 	"fmt"
+	"log"
 	"time"
 )
 
@@ -29,5 +30,40 @@ func MatchKind(value interface{}) TypeKind {
 		return KindDatetime
 	default:
 		panic(fmt.Sprintf("type: %v isn't supported", tp))
+	}
+}
+
+func AutoCast(from TypedValue, to TypeKind) TypedValue {
+
+	if from == nil {
+		return Missing
+	}
+
+	switch to {
+	case KindBoolean:
+		var out bool
+		from.Cast(&out)
+		return Boolean(out)
+	case KindInteger:
+		var out int64
+		from.Cast(&out)
+		return Integer(out)
+	case KindDecimal:
+		var out float64
+		from.Cast(&out)
+		return Decimal(out)
+	case KindDatetime:
+		var out time.Time
+		from.Cast(&out)
+		return Datetime(out)
+	case KindString:
+		var out string
+		from.Cast(&out)
+		return String(out)
+	case KindMissing:
+		return Missing
+	default:
+		log.Fatalf("unable to auto cast type from: %v to kind: %s", from, to)
+		return Missing
 	}
 }

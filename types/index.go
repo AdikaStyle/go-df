@@ -30,4 +30,6 @@ type TypedValue interface {
 	Cast(toPtr interface{})
 	Kind() TypeKind
 	Ptr() TypedValue
+	NativeType() interface{}
+	Precedence() int
 }

@@ -53,3 +53,11 @@ func (i Datetime) Kind() TypeKind {
 func (i Datetime) Ptr() TypedValue {
 	return &i
 }
+
+func (i Datetime) NativeType() interface{} {
+	return time.Time(i)
+}
+
+func (i Datetime) Precedence() int {
+	return 3
+}

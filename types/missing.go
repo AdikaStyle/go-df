@@ -35,3 +35,11 @@ func (m MissingValue) Kind() TypeKind {
 func (m MissingValue) Ptr() TypedValue {
 	return nil
 }
+
+func (b MissingValue) NativeType() interface{} {
+	return nil
+}
+
+func (m MissingValue) Precedence() int {
+	return -1
+}
