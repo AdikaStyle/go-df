@@ -190,7 +190,7 @@ func (this *columnarBackend) CastColumn(name string, toKind types.TypeKind) {
 	}
 }
 
-func (this *columnarBackend) ApplyOnColumn(name string, fn func(value types.TypedValue) types.TypedValue) {
+func (this *columnarBackend) ApplyOnColumn(name string, fn ApplyFunction) {
 	col, found := this.columns[name]
 	if !found {
 		log.Fatalf("canno't apply fn to column with name: %s, column does not exists", name)

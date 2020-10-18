@@ -51,7 +51,7 @@ func (this *defaultTransformable) CastColumn(name string, to types.TypeKind) Dat
 	return this.df
 }
 
-func (this *defaultTransformable) Apply(name string, fn func(value types.TypedValue) types.TypedValue) Dataframe {
+func (this *defaultTransformable) Apply(name string, fn backend.ApplyFunction) Dataframe {
 	this.df.getBackend().ApplyOnColumn(name, fn)
 	return this.df
 }

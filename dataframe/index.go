@@ -40,7 +40,7 @@ type Transformable interface {
 	Concat(with Dataframe) Dataframe
 	Split(cond conds.Condition) (onTrue Dataframe, onFalse Dataframe)
 	CastColumn(name string, to types.TypeKind) Dataframe
-	Apply(name string, fn func(value types.TypedValue) types.TypedValue) Dataframe
+	Apply(name string, fn backend.ApplyFunction) Dataframe
 }
 
 type Aggregatable interface {

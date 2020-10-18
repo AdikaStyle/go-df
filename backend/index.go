@@ -22,7 +22,7 @@ type Backend interface {
 	ConstructNew(headers Headers) Backend
 	SetColumns(columns Columns)
 	CastColumn(name string, toKind types.TypeKind)
-	ApplyOnColumn(name string, fn func(value types.TypedValue) types.TypedValue)
+	ApplyOnColumn(name string, fn ApplyFunction)
 }
 
 type RowVisitor func(id int, row Row)
@@ -30,6 +30,8 @@ type RowVisitor func(id int, row Row)
 type ColumnVisitor func(header string, values Column)
 
 type MutateFunction func(id int, row Row) types.TypedValue
+
+type ApplyFunction func(value types.TypedValue) types.TypedValue
 
 type Row map[string]types.TypedValue
 
