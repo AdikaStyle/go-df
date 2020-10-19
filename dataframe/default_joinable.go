@@ -3,6 +3,7 @@ package dataframe
 import (
 	"github.com/AdikaStyle/go-df/backend"
 	"github.com/AdikaStyle/go-df/conds"
+	"github.com/AdikaStyle/go-df/types"
 )
 
 type defaultJoinable struct {
@@ -120,7 +121,7 @@ func combineRows(left backend.Row, right backend.Row, rightMissing bool) backend
 			continue
 		}
 		if rightMissing {
-			row[k] = nil
+			row[k] = types.Missing
 		} else {
 			row[k] = v
 		}
