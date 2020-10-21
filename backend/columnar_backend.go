@@ -1,9 +1,11 @@
 package backend
 
 import (
+	"fmt"
 	"github.com/AdikaStyle/go-df/types"
 	"github.com/cstockton/go-conv"
 	"log"
+	"math"
 	"math/rand"
 )
 
@@ -212,12 +214,20 @@ func (this *columnarBackend) quickSort(a Column, offset int, order bool, fn swap
 	fn(pivot+offset, right+offset)
 
 	for i := range a {
-		ai, err := conv.Int64(a[i].String())
+		var aistr = a[i].String()
+		if aistr == "null" {
+			aistr = fmt.Sprintf("%d", int64(math.Inf(-1)))
+		}
+		ai, err := conv.Int64(aistr)
 		if err != nil {
 			panic(err)
 		}
 
-		aright, err := conv.Int64(a[right].String())
+		var arstr = a[right].String()
+		if arstr == "null" {
+			arstr = fmt.Sprintf("%d", int64(math.Inf(-1)))
+		}
+		aright, err := conv.Int64(arstr)
 		if err != nil {
 			panic(err)
 		}
