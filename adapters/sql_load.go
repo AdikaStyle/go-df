@@ -62,7 +62,7 @@ func parseRows(headers []string, rows *sql.Rows) [][]string {
 
 		for i, raw := range rawResult {
 			if raw == nil {
-				result[i] = "\\N"
+				result[i] = "0"
 			} else {
 				result[i] = string(raw)
 			}
