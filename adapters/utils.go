@@ -112,7 +112,10 @@ func string2TypedValueKind(val string, kind types.TypeKind) types.TypedValue {
 		return types.Decimal(out)
 	case types.KindDatetime:
 		var out time.Time
-		types.PanicOnError(conv.Infer(&out, val))
+		err := conv.Infer(&out, val)
+		if err != nil {
+			return types.Missing
+		}
 		return types.Datetime(out)
 	case types.KindString:
 		var out string
