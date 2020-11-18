@@ -3,6 +3,7 @@ package types
 import (
 	"fmt"
 	"log"
+	"reflect"
 	"time"
 )
 
@@ -28,6 +29,24 @@ func MatchKind(value interface{}) TypeKind {
 		return KindString
 	case time.Time:
 		return KindDatetime
+	default:
+		panic(fmt.Sprintf("type: %v isn't supported", tp))
+	}
+}
+
+func Convert(value interface{}, kind TypeKind) TypedValue {
+	v := reflect.ValueOf(value)
+	switch tp := value.(type) {
+	case bool:
+		return Boolean(v.Bool())
+	case uint8, uint16, uint32, uint64, uint, int8, int16, int32, int64, int:
+		return Integer(v.Int())
+	case float32, float64:
+		return Decimal(v.Float())
+	case string:
+		return String(v.String())
+	case time.Time:
+		return Datetime(value.(time.Time))
 	default:
 		panic(fmt.Sprintf("type: %v isn't supported", tp))
 	}
