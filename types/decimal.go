@@ -3,6 +3,7 @@ package types
 import (
 	"fmt"
 	"github.com/cstockton/go-conv"
+	"strconv"
 )
 
 type Decimal float64
@@ -42,8 +43,15 @@ func (i Decimal) Compare(other TypedValue) TypeComparision {
 }
 
 func (i Decimal) Cast(toPtr interface{}) {
-	if err := conv.Infer(toPtr, i.NativeType()); err != nil {
-		panic(err)
+	switch toPtr.(type) {
+	case *string:
+		temp := strconv.FormatFloat(i.NativeType().(float64), 'f', -1, 64)
+		origin := toPtr.(*string)
+		*origin = temp
+	default:
+		if err := conv.Infer(toPtr, i.NativeType()); err != nil {
+			panic(err)
+		}
 	}
 }
 

@@ -8,6 +8,7 @@ import (
 const pi = Decimal(3.14)
 const pi_1 = Decimal(3.14)
 const e = Decimal(2.71)
+const long = Decimal(193655049651)
 
 func TestDecimalType_String(t *testing.T) {
 	assert.EqualValues(t, "3.14", pi.String())
@@ -35,6 +36,10 @@ func TestDecimalType_Cast(t *testing.T) {
 	var str string
 	pi.Cast(&str)
 	assert.EqualValues(t, "3.14", str)
+
+	var strLong string
+	long.Cast(&strLong)
+	assert.EqualValues(t, "193655049651", strLong)
 
 	var integer int64
 	pi.Cast(&integer)
