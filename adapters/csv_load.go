@@ -11,13 +11,19 @@ import (
 )
 
 func LoadCSV(path string, delimiter rune) dataframe.Dataframe {
+	return LoadCSVWithHeaders(path, delimiter, nil)
+}
+
+func LoadCSVWithHeaders(path string, delimiter rune, headers backend.Headers) dataframe.Dataframe {
 	content, err := ioutil.ReadFile(path)
 	types.PanicOnError(err)
 
-	records, err := readCsv(content, delimiter)
+	records, err := ReadCsv(content, delimiter)
 	types.PanicOnError(err)
 
-	headers := AnalyzeDataset(records[0], records[1:])
+	if headers == nil {
+		headers = AnalyzeDataset(records[0], records[1:])
+	}
 
 	be := backend.New(headers)
 	populateCSV(be, records)
@@ -35,7 +41,7 @@ func populateCSV(be backend.Backend, records [][]string) {
 	}
 }
 
-func readCsv(content []byte, delimiter rune) ([][]string, error) {
+func ReadCsv(content []byte, delimiter rune) ([][]string, error) {
 	r := csv.NewReader(bytes.NewBuffer(content))
 	r.Comma = delimiter
 	records, err := r.ReadAll()
