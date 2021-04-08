@@ -10,15 +10,12 @@ import (
 	"io/ioutil"
 )
 
-func LoadCSV(path string, delimiter rune) dataframe.Dataframe {
-	return LoadCSVWithHeaders(path, delimiter, nil)
+func ReadCsv(content []byte, delimiter rune) dataframe.Dataframe {
+	return ReadCsvWithHeaders(content, delimiter, nil)
 }
 
-func LoadCSVWithHeaders(path string, delimiter rune, headers backend.Headers) dataframe.Dataframe {
-	content, err := ioutil.ReadFile(path)
-	types.PanicOnError(err)
-
-	records, err := ReadCsv(content, delimiter)
+func ReadCsvWithHeaders(content []byte, delimiter rune, headers backend.Headers) dataframe.Dataframe {
+	records, err := readCsv(content, delimiter)
 	types.PanicOnError(err)
 
 	if headers == nil {
@@ -31,6 +28,17 @@ func LoadCSVWithHeaders(path string, delimiter rune, headers backend.Headers) da
 	return dataframe.New(be)
 }
 
+func LoadCSV(path string, delimiter rune) dataframe.Dataframe {
+	return LoadCSVWithHeaders(path, delimiter, nil)
+}
+
+func LoadCSVWithHeaders(path string, delimiter rune, headers backend.Headers) dataframe.Dataframe {
+	content, err := ioutil.ReadFile(path)
+	types.PanicOnError(err)
+
+	return ReadCsvWithHeaders(content, delimiter, headers)
+}
+
 func populateCSV(be backend.Backend, records [][]string) {
 	for i := 1; i < len(records); i++ {
 		row := make(backend.Row)
@@ -41,7 +49,7 @@ func populateCSV(be backend.Backend, records [][]string) {
 	}
 }
 
-func ReadCsv(content []byte, delimiter rune) ([][]string, error) {
+func readCsv(content []byte, delimiter rune) ([][]string, error) {
 	r := csv.NewReader(bytes.NewBuffer(content))
 	r.Comma = delimiter
 	records, err := r.ReadAll()
